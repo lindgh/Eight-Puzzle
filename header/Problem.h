@@ -1,48 +1,54 @@
-// #ifndef PROBLEM_H
-// #define PROBLEM_H
+#ifndef PROBLEM_H
+#define PROBLEM_H
 
-// #include <iostream>
-// using namespace std;
+#include <iostream>
 
-// //class or a struct? whats the difference
-// struct Node{
+using namespace std;
 
-//     //stores matrix
-//     int arr[N][N];
+struct Node{
 
-//     //stores where 0 is in matrix
-//     int x;
-//     int y;
+    //stores matrix
+    int arr[N][N];
 
-//     //heuristic -> h(n)
-//     int cost;
+    //stores where 0 is in matrix
+    int x;
+    int y;
 
-//     //depth -> g(n)
-//     int level;
-// };
+    //heuristic -> h(n)
+    int cost;
 
-// class Problem{
-//     public:
-//         //variables
-//         int initial_state[3][3];
+    //depth -> g(n)
+    int level;
 
-//         //functions
-//         //inherit the curr state of the prior node, the coords of x,y, and level (g(n))
-//         Node* make_node(int arr[N][N], int x, int y, int level);
+    //overload operator >
+};
 
-//         //operators 
+class Problem{
+    public:
+        //variables
+        int initial_state[3][3];
 
-//         //down
-//         //int x and int y are the coordinates for wherever 0 is
-//         void down(int arr[N][N], int x, int y);
-//         //up
-//         void up(int arr[N][N], int x, int y);
-//         //left
-//         void left(int arr[N][N], int x, int y);
-//         //right
-//         void right(int arr[N][N], int x, int y);
+        //
+        unexplored_queue<Node*> nodes;
 
-// };
+        //final_state
+
+        Node* make_node(int arr[N][N], int x, int y, int level);
+
+        //operators 
+
+        //down
+        //int x and int y are the coordinates for wherever 0 is
+        Node down(int arr[N][N], int x, int y);
+        //up
+        void up(int arr[N][N], int x, int y);
+        //left
+        void left(int arr[N][N], int x, int y);
+        //right
+        void right(int arr[N][N], int x, int y);
+
+};
 
 
-// #endif
+
+#endif
