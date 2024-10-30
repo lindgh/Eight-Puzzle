@@ -1,6 +1,5 @@
 #include <iostream>
 #include "header/Search.h"
-#include "header/Problem.h"
 
 using namespace std;
 
