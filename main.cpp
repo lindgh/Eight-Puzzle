@@ -12,7 +12,7 @@ int main()
     // int user_algo_choice;
 
     // GET USER ALG CHOICE BEFORE MAKING PROBLEM
-    int userAlgorithmChoice = 1;
+    int userAlgorithmChoice = 2;
 
     Problem problem(userAlgorithmChoice);
 

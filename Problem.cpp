@@ -108,6 +108,12 @@ Node Problem::left(const Node& exploring_node){
     if(user_choice == 1){
         temp.heuristic = uniform_heuristic(exploring_node);
     }
+    else if(user_choice == 2){
+        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
+    }
+    else if(user_choice == 3){
+        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
+    }
     else{
         cout << "Not done yet!" << endl;
     }
@@ -126,6 +132,12 @@ Node Problem::up(const Node& exploring_node){
     //call heuristic for uniform rn
     if(user_choice == 1){
         temp.heuristic = uniform_heuristic(exploring_node);
+    }
+    else if(user_choice == 2){
+        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
+    }
+    else if(user_choice == 3){
+        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
     }
     else{
         cout << "Not done yet!" << endl;
@@ -148,6 +160,12 @@ Node Problem::down(const Node& exploring_node){
     if(user_choice == 1){
         temp.heuristic = uniform_heuristic(exploring_node);
     }
+    else if(user_choice == 2){
+        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
+    }
+    else if(user_choice == 3){
+        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
+    }
     else{
         cout << "Not done yet!" << endl;
     }
@@ -169,6 +187,12 @@ Node Problem::right(const Node& exploring_node){
     if(user_choice == 1){
         temp.heuristic = uniform_heuristic(exploring_node);
     }
+    else if(user_choice == 2){
+        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
+    }
+    else if(user_choice == 3){
+        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
+    }
     else{
         cout << "Not done yet!" << endl;
     }
@@ -178,19 +202,75 @@ Node Problem::right(const Node& exploring_node){
 
 }
 
-// //for euclidean distance
-// int Problem::find_final_x(int num){}
-// int Problem::find_final_y(int num){}
+//for euclidean distance
+int Problem::find_final_x(int num){
+    for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			if(num == final_state.table[i][j]){
+				return i;
+				
+			}
+		}
+	}
+	return 0;
+
+}
+
+int Problem::find_final_y(int num){
+    for(int i = 0; i < 3; i++){
+        for(int j = 0; j < 3; j++){
+            if(num == final_state.table[i][j]){
+                return j;
+                
+            }
+        }
+	}
+	return 0;
+}
 
 
 int Problem::uniform_heuristic(const Node& initial_state){
     return 0;
 }
 
-// int Problem::a_misplaced_tile_heuristic(const Node& initial_state){}
+int Problem::a_misplaced_tile_heuristic(const Node& initial_state){
+    int res;
+	//for each index [n][n]-
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			//if initial != final position the calclulate
+			//checks if value in initial = value in final
+			if(initial_state.table[i][j] != final_state.table[i][j]){
+				//we need to find where the position supposed to for value
+				res += 1;
+			}
+		}
+	}
+	return res;
+
+}
 
 
-// int Problem::a_euclidean_distance_heuristic(const Node& initial_state){}
+int Problem::a_euclidean_distance_heuristic(const Node& initial_state){
+    int final_x;
+	int final_y;
+	int res = 0;
+	//for each index [n][n]
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			//if initial != final position the calclulate
+			//checks if value in initial = value in final
+			if(initial_state.table[i][j] != final_state.table[i][j]){
+				//we need to find where the position supposed to be
+				final_x = find_final_x(initial_state.table[i][j]);
+				final_y = find_final_y(initial_state.table[i][j]);
+				//if this is error, calculate x and y seperate then add
+				res += sqrt((i-final_x)^2 + (j-final_y)^2);
+			}
+		}
+    }
+    return res;
+}
 
 //if ever error, recheck zero_x and zero_y, sorry i was lazy
 //explores all valid children from operations

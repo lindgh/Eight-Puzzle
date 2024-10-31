@@ -87,10 +87,10 @@ public:
     //heuristics
 
     int uniform_heuristic(const Node& initial_state);
-    // int a_misplaced_tile_heuristic(const Node& initial_state);
-    // int a_euclidean_distance_heuristic(const Node& initial_state);
-    // int find_final_x(int num);
-    // int find_final_y(int num);
+    int a_misplaced_tile_heuristic(const Node& initial_state);
+    int a_euclidean_distance_heuristic(const Node& initial_state);
+    int find_final_x(int num);
+    int find_final_y(int num);
 };
 
 #endif
