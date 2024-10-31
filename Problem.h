@@ -61,17 +61,28 @@ public:
     Problem(int userChoice);
     void Search() const;
 
-    // operators
 
-    // // down
-    // // int x and int y are the coordinates for wherever 0 is
-    // Node down(Node& parentNode const);
-    // // up
-    // void up(int arr[N][N], int x, int y);
-    // // left
-    // void left(int arr[N][N], int x, int y);
-    // // right
-    // void right(int arr[N][N], int x, int y);
+    Node explore(Node& exploring_node const);
+
+    //operators 
+
+    //down
+    //int x and int y are the coordinates for wherever 0 is
+    Node down(Node& exploring_node const);
+    //up
+    void up(Node& exploring_node const);
+    //left
+    void left(Node& exploring_node const);
+    //right
+    void right(Node& exploring_node const);
+
+    //heuristics
+
+    int uniform_heuristic(Node& initial_state const);
+    int a_misplaced_tile_heuristic(Node& initial_state const);
+    int a_euclidean_distance_heuristic(Node& initial_state const);
+    int find_final_x(int num);
+    int find_final_y(int num);
 };
 
 #endif
