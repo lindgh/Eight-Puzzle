@@ -1,7 +1,6 @@
 #include "Problem.h"
 
 #include <iostream>
-#include <queue>
 using namespace std;
 
 ostream &operator<<(ostream &out, const Node &node)
@@ -195,57 +194,85 @@ Node Problem::right(const Node &exploring_node)
 
 // OTHER HEURISTICS
 
-// //for euclidean distance
-// int Problem::find_final_x(int num){}
-// int Problem::find_final_y(int num){}
+// for euclidean distance
+int Problem::find_final_x(int num)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (num == final_state.table[i][j])
+            {
+                return i;
+            }
+        }
+    }
+    return 0;
+}
+
+int Problem::find_final_y(int num)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (num == final_state.table[i][j])
+            {
+                return j;
+            }
+        }
+    }
+    return 0;
+}
 
 int Problem::uniform_heuristic(const Node &initial_state)
 {
     return 0;
 }
 
-// OTHER HEURISTICS
-
-// int Problem::a_misplaced_tile_heuristic(const Node& initial_state){}
-
-// int Problem::a_euclidean_distance_heuristic(const Node& initial_state){}
-
-bool Problem::repeated(const Node &exploring_node)
+int Problem::a_misplaced_tile_heuristic(const Node &initial_state)
 {
-    bool detected = false;
-
-    // check explored vector to see if exploring_node is repeated
-    for (int i = 0; i < explored.size(); i++)
+    int res;
+    // for each index [n][n]-
+    for (int i = 0; i < 3; i++)
     {
-        if (explored.at(i) == exploring_node)
+        for (int j = 0; j < 3; j++)
         {
-            detected = true;
-            break;
+            // if initial != final position the calclulate
+            // checks if value in initial = value in final
+            if (initial_state.table[i][j] != final_state.table[i][j])
+            {
+                // we need to find where the position supposed to for value
+                res += 1;
+            }
         }
     }
-
-    return detected;
+    return res;
 }
 
-// call heuristic function based on algorithmChoice
-int Problem::calculateHeuristic(const Node &temp)
+int Problem::a_euclidean_distance_heuristic(const Node &initial_state)
 {
-    int h = 0;
-
-    switch (algorithmChoice)
+    int final_x;
+    int final_y;
+    int res = 0;
+    // for each index [n][n]
+    for (int i = 0; i < 3; i++)
     {
-    case 1:
-        h = uniform_heuristic(temp);
-        break;
-    case 2:
-        cout << "\nA* with the Misplaced Tile heuristic under construction..." << endl;
-        break;
-    case 3:
-        cout << "\nA* with the Euclidean distance heuristic under construction..." << endl;
-        break;
+        for (int j = 0; j < 3; j++)
+        {
+            // if initial != final position the calclulate
+            // checks if value in initial = value in final
+            if (initial_state.table[i][j] != final_state.table[i][j])
+            {
+                // we need to find where the position supposed to be
+                final_x = find_final_x(initial_state.table[i][j]);
+                final_y = find_final_y(initial_state.table[i][j]);
+                // if this is error, calculate x and y seperate then add
+                res += sqrt((i - final_x) ^ 2 + (j - final_y) ^ 2);
+            }
+        }
     }
-
-    return h;
+    return res;
 }
 
 // if ever error, recheck zero_x and zero_y, sorry i was lazy
