@@ -39,9 +39,9 @@ struct Node
         // for now just a zero, maybe can call alg here
         //  then maybe option for algorithm should be saved
         //  here
-        heuristic = 0;
+        heuristic = rhs.heuristic;
         // also might need to be changed...
-        depth = 0;
+        depth = rhs.depth;
         return *this;
     }
 };
@@ -58,14 +58,14 @@ public:
     priority_queue<Node> unexplored;
     queue<Node> explored;
 
-    Problem();
+    Problem(int userChoice);
     void Search() const;
 
     // operators
 
     // // down
     // // int x and int y are the coordinates for wherever 0 is
-    // Node down(int arr[N][N], int x, int y);
+    // Node down(Node& parentNode const);
     // // up
     // void up(int arr[N][N], int x, int y);
     // // left

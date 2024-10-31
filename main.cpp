@@ -10,53 +10,16 @@ int main()
     // int user_choice;
     // string row = "first";
     // int user_algo_choice;
-    // //default array (initial state)
-    // //idk how to change the class Problem's array
-    // Problem p;
 
-    // for now, we will have only 1 choice: a default table
+    // GET USER ALG CHOICE BEFORE MAKING PROBLEM
+    int userAlgorithmChoice = 0;
 
-    // initialize problem's initial state and final state
-    // then call search
+    Problem problem(userAlgorithmChoice);
 
-    int temp_initial[3][3] = {
-        {1, 2, 3},
-        {4, 8, 0},
-        {7, 6, 5}};
-
-    Problem problem;
-    Node temp;
-    // temp.table = temp_initial;
-
-    // goal array (goal state)
-    int goal_state[3][3] = {
-        {1, 2, 3},
-        {4, 5, 6},
-        {7, 8, 0}};
-
-    cout << temp << endl;
-
-    // cout << p.initial_state << endl;
-
-    // for (int i = 0; i < 3; ++i)
-    // {
-    //     for (int j = 0; j < 3; ++j)
-    //     {
-    //         p.initial_state.table[i][j] = i + j;
-    //     }
-    //     cout << endl;
-    // }
-
-    // for (int i = 0; i < 3; ++i)
-    // {
-    //     for (int j = 0; j < 3; ++j)
-    //     {
-    //         cout << p.initial_state.table[i][j] << "    ";
-    //     }
-    //     cout << endl;
-    // }
-    // cout << "p.initial_state.heuristic: " << p.initial_state.heuristic << endl;
-    // cout << "p.initial_state.depth: " << p.initial_state.depth << endl;
+    cout << "problem.initial_state: \n"
+         << problem.initial_state << endl;
+    // cout << "problem.final_state: \n"
+    //      << problem.final_state << endl;
 
     // //welcome the user
     // cout << "Welcome to 862331573 and 862267489's and HOLLAND SID 8 puzzle solver." << endl;
