@@ -19,25 +19,35 @@ ostream &operator<<(ostream &out, const Node &node)
     return out;
 }
 
-void Problem::Search() const
+void Problem::Search() 
 {
+    bool foundSolution = false;
 
-    // cout << "Searching..." << endl;
-    // cout << "initial_state: " << initial_state << endl;
-    // cout << "final_state: " << final_state << endl;
+    //FIRST ORDER OF BUSINESS!! push onto queue.
+    unexplored.push(initial_state);
+   
+    Node exploring_node;
 
-    /*
-    while (queue not empty) {
-        Node exploringNode = exploring_queue.pop
-        if (exploringNode != goalstate) {
-            explore(exploringNode) //when this done, queue should have all its children added
-            explored.push(exploringNode)
+    while (!unexplored.empty() && !foundSolution) {
+        exploring_node = unexplored.top();
+        unexplored.pop();
+
+        cout << "exploring node: \n" << exploring_node << endl;
+
+        if (exploring_node == final_state) {
+            cout << "solution has been found!" << endl;
+            foundSolution = true;
         }
         else {
-            you found solution!
+            explore(exploring_node);
+            explored.push(exploring_node); 
         }
     }
-    */
+
+    cout << "queue empty now!" << endl;
+    if (!foundSolution) {
+        cout << "solution hasn't been found :(" << endl;
+    }
 }
 
 // constructor
@@ -192,6 +202,21 @@ int Problem::uniform_heuristic(const Node& initial_state){
 
 // int Problem::a_euclidean_distance_heuristic(const Node& initial_state){}
 
+bool Problem::repeated(const Node& exploring_node) {
+    bool detected = false;
+    queue<Node> temp_queue = explored;
+
+    //as long as temp isnt empty and repeat hasnt been detected, continue to search
+    while ((!temp_queue.empty()) && (!detected)) {
+        if (temp_queue.front() == exploring_node) {
+            detected = true;
+        }
+        temp_queue.pop();
+    }
+
+    return detected;
+}
+
 //if ever error, recheck zero_x and zero_y, sorry i was lazy
 //explores all valid children from operations
 void Problem::explore(const Node& exploring_node){
@@ -200,25 +225,33 @@ void Problem::explore(const Node& exploring_node){
         //up
         if(exploring_node.zero_x > 0){
             Node explore_child = up(exploring_node);
-            unexplored.push(explore_child);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
         }
 
         //left
         if(exploring_node.zero_y > 0){
             Node explore_child = left(exploring_node);
-            unexplored.push(explore_child);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
         }
 
         //down
         if(exploring_node.zero_x < 2){
             Node explore_child = down(exploring_node);
-            unexplored.push(explore_child);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
         }
 
         //right
         if(exploring_node.zero_y < 2){
             Node explore_child = right(exploring_node);
-            unexplored.push(explore_child);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
         }
         //if you wanna test with node return type
         //make sure to comment the queue line

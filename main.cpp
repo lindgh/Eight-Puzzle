@@ -12,19 +12,14 @@ int main()
     // int user_algo_choice;
 
     // GET USER ALG CHOICE BEFORE MAKING PROBLEM
+
+
     int userAlgorithmChoice = 1;
 
     Problem problem(userAlgorithmChoice);
 
-    cout << "problem.initial_state: \n"
-         << problem.initial_state << endl;
+    problem.Search();
 
-    //testing: explore and left operator
-    //if you wanna test, change explore to Node and only have one op at a time
-    // Node smth = problem.explore(problem.initial_state);
-    // cout << smth;
-    // cout << "problem.final_state: \n"
-    //      << problem.final_state << endl;
 
     // //welcome the user
     // cout << "Welcome to 862331573 and 862267489's and HOLLAND SID 8 puzzle solver." << endl;
