@@ -3,23 +3,18 @@
 
 #include <iostream>
 #include <queue>
+#include <stack>
+#include <cmath>
 using namespace std;
 
 struct Node
 {
 
-    int table[3][3]; // the eight table
-
-    // stores where 0 is in matrix, heuristic -> h(n), depth -> g(n)
-    int zero_x, zero_y, heuristic, depth;
+    int table[3][3];                      // the eight table
+    int zero_x, zero_y, heuristic, depth; // stores where 0 is in matrix, heuristic -> h(n), depth -> g(n)
+    int parent;                           // holds index of parent in explored vector
 
     // overload operator>: allows us to make min priority queue!
-    bool operator>(const Node &rhs) const
-    {
-        // returns true that N1 > N2 if its f(n) is less than N2's
-        return (heuristic + depth) < (rhs.heuristic + rhs.depth);
-    }
-
     bool operator<(const Node &rhs) const
     {
         // returns true that N1 > N2 if its f(n) is less than N2's
@@ -48,7 +43,24 @@ struct Node
         heuristic = rhs.heuristic;
         // also might need to be changed...
         depth = rhs.depth;
+        parent = rhs.parent;
         return *this;
+    }
+
+    bool operator==(const Node &rhs)
+    {
+        bool equal = true;
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                if (table[i][j] != rhs.table[i][j])
+                {
+                    equal = false;
+                }
+            }
+        }
+        return equal;
     }
 };
 
@@ -62,33 +74,39 @@ public:
     Node initial_state;
     Node final_state;
     priority_queue<Node> unexplored;
-    queue<Node> explored;
-    int user_choice;
+    vector<Node> explored;
+    stack<Node> solution;
 
-    Problem(int userChoice);
+    int algorithmChoice;
 
-    void Search() const;
+    Problem(int userChoice, int temp_initial[3][3]);
 
+    void search();
 
-    void explore(const Node& exploring_node);
-    //to test: instead of pushing to queue, output it instead
+    void explore(const Node &exploring_node);
+    // to test: instead of pushing to queue, output it instead
+    bool repeated(const Node &exploring_node);
+    int calculateHeuristic(const Node &exploring_node);
 
-    //operators 
+    // to print out solution path!
+    void trace();
 
-    //down
-    Node down (const Node& exploring_node);
-    //up
-    Node up(const Node& exploring_node);
-    //left
-    Node left(const Node& exploring_node);
-    //right
-    Node right(const Node& exploring_node);
+    // operators
 
-    //heuristics
+    // down
+    Node down(const Node &exploring_node);
+    // up
+    Node up(const Node &exploring_node);
+    // left
+    Node left(const Node &exploring_node);
+    // right
+    Node right(const Node &exploring_node);
 
-    int uniform_heuristic(const Node& initial_state);
-    int a_misplaced_tile_heuristic(const Node& initial_state);
-    int a_euclidean_distance_heuristic(const Node& initial_state);
+    // heuristics
+
+    int uniform_heuristic(const Node &initial_state);
+    int a_misplaced_tile_heuristic(const Node &initial_state);
+    int a_euclidean_distance_heuristic(const Node &initial_state);
     int find_final_x(int num);
     int find_final_y(int num);
 };

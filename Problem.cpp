@@ -1,7 +1,6 @@
 #include "Problem.h"
 
 #include <iostream>
-#include <queue>
 using namespace std;
 
 ostream &operator<<(ostream &out, const Node &node)
@@ -19,32 +18,84 @@ ostream &operator<<(ostream &out, const Node &node)
     return out;
 }
 
-void Problem::Search() const
+void Problem::search()
 {
+    bool foundSolution = false;
 
-    // cout << "Searching..." << endl;
-    // cout << "initial_state: " << initial_state << endl;
-    // cout << "final_state: " << final_state << endl;
+    // FIRST ORDER OF BUSINESS!! push onto queue.
+    unexplored.push(initial_state); // test: good
+    Node exploring_node;
 
-    /*
-    while (queue not empty) {
-        Node exploringNode = exploring_queue.pop
-        if (exploringNode != goalstate) {
-            explore(exploringNode) //when this done, queue should have all its children added
-            explored.push(exploringNode)
+    while (!unexplored.empty() && !foundSolution)
+    {
+        exploring_node = unexplored.top(); // remove node from top of queue
+        unexplored.pop();
+        explored.push_back(exploring_node);
+
+        if (exploring_node == final_state) // check if final soln
+        {
+            cout << "\nSolution has been found!" << endl;
+            foundSolution = true;
+            // below should be setting all of final_state's data to exploring_node's
+            final_state = exploring_node;
         }
-        else {
-            you found solution!
+        else
+        {
+            explore(exploring_node);
         }
     }
-    */
+
+    // cout << "queue empty now!" << endl;
+    if (!foundSolution)
+    {
+        cout << "solution hasn't been found :(" << endl;
+    }
+}
+
+void Problem::trace()
+{
+    // using final_state, save backtracing to problem's solution stack
+    // cout << "pushing final_state to soln stack: \n"
+    //      << solution.top() << endl;
+
+    // check if equal to initial state, if not then access its parent index
+    Node temp;
+    temp = final_state;
+    solution.push(temp);
+    int solution_nodes = 1;
+
+    while (!(temp == initial_state))
+    {
+        temp = explored.at(temp.parent);
+        solution.push(temp);
+        ++solution_nodes;
+    }
+
+    // count nodes explored
+    int numExplored = 0;
+    while (!explored.empty())
+    {
+        explored.pop_back();
+        ++numExplored;
+    }
+
+    cout << "Nodes explored: " << numExplored << endl;
+    cout << "Nodes in solution: " << solution_nodes << endl;
+    cout << "\nBacktracing: \n"
+         << endl;
+
+    while (!solution.empty())
+    {
+        cout << solution.top() << endl;
+        solution.pop();
+    }
 }
 
 // constructor
-Problem::Problem(int userChoice)
+Problem::Problem(int userChoice, int temp_initial[3][3])
 {
-    //to store user choice for other functions to use
-    user_choice = userChoice;
+    // to store user choice for other functions to use
+    algorithmChoice = userChoice;
     // 1) initialize final_state node
 
     int goal_state[3][3] = {
@@ -72,12 +123,6 @@ Problem::Problem(int userChoice)
 
     // 2) initialize initial_state node
 
-    int temp_initial[3][3] = // THIS IS TEMPORARILY HARD CODED NO MATTER WHAT FOR TESTING!!!
-        {
-            {1, 2, 3},
-            {4, 8, 0},
-            {7, 6, 5}};
-
     for (int i = 0; i < 3; ++i) // set initial_state to temp_inital
     {
         for (int j = 0; j < 3; ++j)
@@ -95,212 +140,187 @@ Problem::Problem(int userChoice)
     initial_state.depth = 0;
 }
 
-
-
-//left
-Node Problem::left(const Node& exploring_node){
+// left
+Node Problem::left(const Node &exploring_node)
+{
     Node temp = exploring_node;
-    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x][temp.zero_y-1]);
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x][temp.zero_y - 1]);
     temp.zero_y = temp.zero_y - 1;
     temp.depth += 1;
-
-    //call heuristic for uniform rn
-    if(user_choice == 1){
-        temp.heuristic = uniform_heuristic(exploring_node);
-    }
-    else if(user_choice == 2){
-        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
-    }
-    else if(user_choice == 3){
-        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
-    }
-    else{
-        cout << "Not done yet!" << endl;
-    }
-    //then make calls to the other heuristic
+    temp.parent = explored.size() - 1;
+    temp.heuristic = calculateHeuristic(temp);
 
     return temp;
-
 }
-//up
-Node Problem::up(const Node& exploring_node){
+
+// up
+Node Problem::up(const Node &exploring_node)
+{
     Node temp = exploring_node;
-    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x-1][temp.zero_y]);
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x - 1][temp.zero_y]);
     temp.zero_x = temp.zero_x - 1;
     temp.depth += 1;
-
-    //call heuristic for uniform rn
-    if(user_choice == 1){
-        temp.heuristic = uniform_heuristic(exploring_node);
-    }
-    else if(user_choice == 2){
-        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
-    }
-    else if(user_choice == 3){
-        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
-    }
-    else{
-        cout << "Not done yet!" << endl;
-    }
-    //then make calls to the other heuristic
+    temp.parent = explored.size() - 1;
+    temp.heuristic = calculateHeuristic(temp);
 
     return temp;
-
 }
 
-
-//down
-Node Problem::down(const Node& exploring_node){
+// down
+Node Problem::down(const Node &exploring_node)
+{
     Node temp = exploring_node;
-    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x+1][temp.zero_y]);
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x + 1][temp.zero_y]);
     temp.zero_x = temp.zero_x + 1;
     temp.depth += 1;
-
-    //call heuristic for uniform rn
-    if(user_choice == 1){
-        temp.heuristic = uniform_heuristic(exploring_node);
-    }
-    else if(user_choice == 2){
-        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
-    }
-    else if(user_choice == 3){
-        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
-    }
-    else{
-        cout << "Not done yet!" << endl;
-    }
-    //then make calls to the other heuristic
+    temp.parent = explored.size() - 1;
+    temp.heuristic = calculateHeuristic(temp);
 
     return temp;
-
 }
 
-
-//right
-Node Problem::right(const Node& exploring_node){
+// right
+Node Problem::right(const Node &exploring_node)
+{
     Node temp = exploring_node;
-    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x][temp.zero_y+1]);
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x][temp.zero_y + 1]);
     temp.zero_y = temp.zero_y + 1;
     temp.depth += 1;
-
-    //call heuristic for uniform rn
-    if(user_choice == 1){
-        temp.heuristic = uniform_heuristic(exploring_node);
-    }
-    else if(user_choice == 2){
-        temp.heuristic = a_misplaced_tile_heuristic(exploring_node);
-    }
-    else if(user_choice == 3){
-        temp.heuristic = a_euclidean_distance_heuristic(exploring_node);
-    }
-    else{
-        cout << "Not done yet!" << endl;
-    }
-    //then make calls to the other heuristic
+    temp.parent = explored.size() - 1;
+    temp.heuristic = calculateHeuristic(temp);
 
     return temp;
-
 }
 
-//for euclidean distance
-int Problem::find_final_x(int num){
-    for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
-			if(num == final_state.table[i][j]){
-				return i;
-				
-			}
-		}
-	}
-	return 0;
+// OTHER HEURISTICS
 
-}
-
-int Problem::find_final_y(int num){
-    for(int i = 0; i < 3; i++){
-        for(int j = 0; j < 3; j++){
-            if(num == final_state.table[i][j]){
-                return j;
-                
+// for euclidean distance
+int Problem::find_final_x(int num)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (num == final_state.table[i][j])
+            {
+                return i;
             }
         }
-	}
-	return 0;
-}
-
-
-int Problem::uniform_heuristic(const Node& initial_state){
+    }
     return 0;
 }
 
-int Problem::a_misplaced_tile_heuristic(const Node& initial_state){
-    int res;
-	//for each index [n][n]-
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
-			//if initial != final position the calclulate
-			//checks if value in initial = value in final
-			if(initial_state.table[i][j] != final_state.table[i][j]){
-				//we need to find where the position supposed to for value
-				res += 1;
-			}
-		}
-	}
-	return res;
-
+int Problem::find_final_y(int num)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (num == final_state.table[i][j])
+            {
+                return j;
+            }
+        }
+    }
+    return 0;
 }
 
+int Problem::uniform_heuristic(const Node &initial_state)
+{
+    return 0;
+}
 
-int Problem::a_euclidean_distance_heuristic(const Node& initial_state){
-    int final_x;
-	int final_y;
-	int res = 0;
-	//for each index [n][n]
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
-			//if initial != final position the calclulate
-			//checks if value in initial = value in final
-			if(initial_state.table[i][j] != final_state.table[i][j]){
-				//we need to find where the position supposed to be
-				final_x = find_final_x(initial_state.table[i][j]);
-				final_y = find_final_y(initial_state.table[i][j]);
-				//if this is error, calculate x and y seperate then add
-				res += sqrt((i-final_x)^2 + (j-final_y)^2);
-			}
-		}
+int Problem::a_misplaced_tile_heuristic(const Node &initial_state)
+{
+    int res;
+    // for each index [n][n]-
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            // if initial != final position the calclulate
+            // checks if value in initial = value in final
+            if (initial_state.table[i][j] != final_state.table[i][j])
+            {
+                // we need to find where the position supposed to for value
+                res += 1;
+            }
+        }
     }
     return res;
 }
 
-//if ever error, recheck zero_x and zero_y, sorry i was lazy
-//explores all valid children from operations
-void Problem::explore(const Node& exploring_node){
-        //each section makes valid child, adds it to queue
-
-        //up
-        if(exploring_node.zero_x > 0){
-            Node explore_child = up(exploring_node);
-            unexplored.push(explore_child);
+int Problem::a_euclidean_distance_heuristic(const Node &initial_state)
+{
+    int final_x;
+    int final_y;
+    int res = 0;
+    // for each index [n][n]
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            // if initial != final position the calclulate
+            // checks if value in initial = value in final
+            if (initial_state.table[i][j] != final_state.table[i][j])
+            {
+                // we need to find where the position supposed to be
+                final_x = find_final_x(initial_state.table[i][j]);
+                final_y = find_final_y(initial_state.table[i][j]);
+                // if this is error, calculate x and y seperate then add
+                res += sqrt((i - final_x) ^ 2 + (j - final_y) ^ 2);
+            }
         }
-
-        //left
-        if(exploring_node.zero_y > 0){
-            Node explore_child = left(exploring_node);
-            unexplored.push(explore_child);
-        }
-
-        //down
-        if(exploring_node.zero_x < 2){
-            Node explore_child = down(exploring_node);
-            unexplored.push(explore_child);
-        }
-
-        //right
-        if(exploring_node.zero_y < 2){
-            Node explore_child = right(exploring_node);
-            unexplored.push(explore_child);
-        }
-        //if you wanna test with node return type
-        //make sure to comment the queue line
-        //return exploring_node;
     }
+    return res;
+}
+
+// if ever error, recheck zero_x and zero_y, sorry i was lazy
+// explores all valid children from operations
+void Problem::explore(const Node &exploring_node)
+{
+    // each section makes valid child, adds it to queue
+
+    // up
+    if (exploring_node.zero_x > 0)
+    {
+        Node explore_child = up(exploring_node);
+        if (!repeated(explore_child))
+        {
+            unexplored.push(explore_child);
+        }
+    }
+
+    // left
+    if (exploring_node.zero_y > 0)
+    {
+        Node explore_child = left(exploring_node);
+        if (!repeated(explore_child))
+        {
+            unexplored.push(explore_child);
+        }
+    }
+
+    // down
+    if (exploring_node.zero_x < 2)
+    {
+        Node explore_child = down(exploring_node);
+        if (!repeated(explore_child))
+        {
+            unexplored.push(explore_child);
+        }
+    }
+
+    // right
+    if (exploring_node.zero_y < 2)
+    {
+        Node explore_child = right(exploring_node);
+        if (!repeated(explore_child))
+        {
+            unexplored.push(explore_child);
+        }
+    }
+    // if you wanna test with node return type
+    // make sure to comment the queue line
+    // return exploring_node;
+}
