@@ -8,7 +8,7 @@ using namespace std;
 struct Node{
 
     //stores matrix
-    int arr[N][N];
+    int table[3][3];
 
     //stores where 0 is in matrix
     int x;
@@ -25,27 +25,36 @@ struct Node{
 
 class Problem{
     public:
-        //variables
-        int initial_state[3][3];
-
-        //
-        unexplored_queue<Node*> nodes;
 
         //final_state
 
-        Node* make_node(int arr[N][N], int x, int y, int level);
+        Node make_node(int arr[N][N], int x, int y, int level);
+
+        Node explore(Node& exploring_node const);
 
         //operators 
 
         //down
         //int x and int y are the coordinates for wherever 0 is
-        Node down(int arr[N][N], int x, int y);
+        Node down(Node& exploring_node const);
         //up
-        void up(int arr[N][N], int x, int y);
+        void up(Node& exploring_node const);
         //left
-        void left(int arr[N][N], int x, int y);
+        void left(Node& exploring_node const);
         //right
-        void right(int arr[N][N], int x, int y);
+        void right(Node& exploring_node const);
+
+        //heuristics
+
+        int uniform_heuristic(Node& initial_state const);
+        int a_misplaced_tile_heuristic(Node& initial_state const);
+        int a_euclidean_distance_heuristic(Node& initial_state const);
+        int find_final_x(int num);
+        int find_final_y(int num);
+
+
+
+
 
 };
 
