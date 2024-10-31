@@ -18,12 +18,45 @@ ostream &operator<<(ostream &out, const Node &node)
     return out;
 }
 
-void Problem::Search() const
+void Problem::Search() 
 {
-
+    bool foundSolution = false;
+    
     // cout << "Searching..." << endl;
-    // cout << "initial_state: " << initial_state << endl;
-    // cout << "final_state: " << final_state << endl;
+    // cout << "initial_state: \n" << initial_state << endl;
+    // cout << "final_state: \n" << final_state << endl;
+
+    //FIRST ORDER OF BUSINESS!! push onto queue.
+    unexplored_queue.push(initial_state);
+   
+    Node exploring_node;
+
+    while (!unexplored_queue.empty() && !foundSolution) {
+        exploring_node = unexplored_queue.top();
+        unexplored_queue.pop();
+
+        cout << "exploring node: \n" << exploring_node << endl;
+
+        if (exploring_node == final_state) {
+            cout << "solution has been found!" << endl;
+            foundSolution = true;
+        }
+        else {
+            // do the explore stuff
+            explore(exploring_node);
+            explored_queue.push(exploring_node); 
+        }
+
+
+    }
+
+    cout << "queue empty now!" << endl;
+
+
+    
+
+    
+
 
     /*
     while (queue not empty) {
@@ -92,17 +125,27 @@ Problem::Problem(int userChoice)
     initial_state.depth = 0;
 }
 
-//down
-Node down(const Node& exploring_node){
-    Node temp = exploring_node;
-    swap(temp[temp.zero_x][temp.zero_y], temp[temp.zero_x-1][temp.zero_y]);
-    temp.zero_x = temp.zero_x - 1;
-    temp.depth += 1;
 
+void Problem::explore(const Node& exploring_node) {
+    cout << "exploring!" << endl; 
+}
+//down
+Node Problem::down(const Node& exploring_node){
+    Node temp = exploring_node;
+    // swap(temp[temp.zero_x][temp.zero_y], temp[temp.zero_x-1][temp.zero_y]);
+    // temp.zero_x = temp.zero_x - 1;
+    // temp.depth += 1;
+    return temp; 
 }
 //up
-Node up(const Node& exploring_node);
+Node Problem::up(const Node& exploring_node){
+    return exploring_node;
+}
 //left
-Node left(const Node& exploring_node);
+Node Problem::left(const Node& exploring_node){
+    return exploring_node;
+}
 //right
-Node right(const Node& exploring_node);
+Node Problem::right(const Node& exploring_node) {
+    return exploring_node;
+}

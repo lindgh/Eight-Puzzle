@@ -14,10 +14,10 @@ struct Node
     int zero_x, zero_y, heuristic, depth;
 
     // overload operator>: allows us to make min priority queue!
-    bool operator>(const Node &rhs) const
+    bool operator<(const Node &rhs) const
     {
         // returns true that N1 > N2 if its f(n) is less than N2's
-        return (heuristic + depth) < (rhs.heuristic + rhs.depth);
+        return (heuristic + depth) > (rhs.heuristic + rhs.depth);
     }
 
     // overloads assignment operator
@@ -44,6 +44,20 @@ struct Node
         depth = rhs.depth;
         return *this;
     }
+
+    bool operator==(const Node &rhs) {
+        bool equal = true;
+        for (int i = 0; i < 3; ++i)
+        {
+            for (int j = 0; j < 3; ++j)
+            {
+                if (table[i][j] != rhs.table[i][j]) {
+                    equal = false;
+                }
+            }
+        }
+        return equal;
+    }
 };
 
 // overload output operator for a Node
@@ -55,15 +69,15 @@ public:
     // variables
     Node initial_state;
     Node final_state;
-    priority_queue<Node> unexplored;
-    queue<Node> explored;
+    priority_queue<Node> unexplored_queue;
+    queue<Node> explored_queue;
 
     Problem(int userChoice);
 
-    void Search() const;
+    void Search();
 
 
-    Node explore(const Node& exploring_node);
+    void explore(const Node& exploring_node);
 
     //operators 
 

@@ -16,10 +16,7 @@ int main()
 
     Problem problem(userAlgorithmChoice);
 
-    cout << "problem.initial_state: \n"
-         << problem.initial_state << endl;
-    // cout << "problem.final_state: \n"
-    //      << problem.final_state << endl;
+    problem.Search();
 
     // //welcome the user
     // cout << "Welcome to 862331573 and 862267489's and HOLLAND SID 8 puzzle solver." << endl;
