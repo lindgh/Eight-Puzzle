@@ -59,28 +59,29 @@ public:
     queue<Node> explored;
 
     Problem(int userChoice);
+
     void Search() const;
 
 
-    Node explore(Node& exploring_node const);
+    Node explore(const Node& exploring_node);
 
     //operators 
 
     //down
     //int x and int y are the coordinates for wherever 0 is
-    Node down(Node& exploring_node const);
+    Node down(const Node& exploring_node);
     //up
-    Node up(Node& exploring_node const);
+    Node up(const Node& exploring_node);
     //left
-    Node left(Node& exploring_node const);
+    Node left(const Node& exploring_node);
     //right
-    Node right(Node& exploring_node const);
+    Node right(const Node& exploring_node);
 
     //heuristics
 
-    int uniform_heuristic(Node& initial_state const);
-    int a_misplaced_tile_heuristic(Node& initial_state const);
-    int a_euclidean_distance_heuristic(Node& initial_state const);
+    int uniform_heuristic(const Node& initial_state);
+    int a_misplaced_tile_heuristic(const Node& initial_state);
+    int a_euclidean_distance_heuristic(const Node& initial_state);
     int find_final_x(int num);
     int find_final_y(int num);
 };
