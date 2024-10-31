@@ -20,6 +20,12 @@ struct Node
         return (heuristic + depth) < (rhs.heuristic + rhs.depth);
     }
 
+    bool operator<(const Node &rhs) const
+    {
+        // returns true that N1 > N2 if its f(n) is less than N2's
+        return (heuristic + depth) > (rhs.heuristic + rhs.depth);
+    }
+
     // overloads assignment operator
     Node &operator=(const Node &rhs)
     {
@@ -57,19 +63,20 @@ public:
     Node final_state;
     priority_queue<Node> unexplored;
     queue<Node> explored;
+    int user_choice;
 
     Problem(int userChoice);
 
     void Search() const;
 
 
-    Node explore(const Node& exploring_node);
+    void explore(const Node& exploring_node);
+    //to test: instead of pushing to queue, output it instead
 
     //operators 
 
     //down
-    //int x and int y are the coordinates for wherever 0 is
-    Node down(const Node& exploring_node);
+    Node down (const Node& exploring_node);
     //up
     Node up(const Node& exploring_node);
     //left
@@ -80,10 +87,10 @@ public:
     //heuristics
 
     int uniform_heuristic(const Node& initial_state);
-    int a_misplaced_tile_heuristic(const Node& initial_state);
-    int a_euclidean_distance_heuristic(const Node& initial_state);
-    int find_final_x(int num);
-    int find_final_y(int num);
+    // int a_misplaced_tile_heuristic(const Node& initial_state);
+    // int a_euclidean_distance_heuristic(const Node& initial_state);
+    // int find_final_x(int num);
+    // int find_final_y(int num);
 };
 
 #endif
