@@ -70,11 +70,11 @@ public:
     //int x and int y are the coordinates for wherever 0 is
     Node down(Node& exploring_node const);
     //up
-    void up(Node& exploring_node const);
+    Node up(Node& exploring_node const);
     //left
-    void left(Node& exploring_node const);
+    Node left(Node& exploring_node const);
     //right
-    void right(Node& exploring_node const);
+    Node right(Node& exploring_node const);
 
     //heuristics
 
