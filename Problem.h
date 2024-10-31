@@ -69,8 +69,9 @@ public:
     // variables
     Node initial_state;
     Node final_state;
-    priority_queue<Node> unexplored_queue;
-    queue<Node> explored_queue;
+    priority_queue<Node> unexplored;
+    queue<Node> explored;
+    int user_choice;
 
     Problem(int userChoice);
 
@@ -78,12 +79,13 @@ public:
 
 
     void explore(const Node& exploring_node);
+    //to test: instead of pushing to queue, output it instead
+    bool repeated(const Node& exploring_node);
 
     //operators 
 
     //down
-    //int x and int y are the coordinates for wherever 0 is
-    Node down(const Node& exploring_node);
+    Node down (const Node& exploring_node);
     //up
     Node up(const Node& exploring_node);
     //left
@@ -94,10 +96,10 @@ public:
     //heuristics
 
     int uniform_heuristic(const Node& initial_state);
-    int a_misplaced_tile_heuristic(const Node& initial_state);
-    int a_euclidean_distance_heuristic(const Node& initial_state);
-    int find_final_x(int num);
-    int find_final_y(int num);
+    // int a_misplaced_tile_heuristic(const Node& initial_state);
+    // int a_euclidean_distance_heuristic(const Node& initial_state);
+    // int find_final_x(int num);
+    // int find_final_y(int num);
 };
 
 #endif

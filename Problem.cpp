@@ -1,6 +1,7 @@
 #include "Problem.h"
 
 #include <iostream>
+#include <queue>
 using namespace std;
 
 ostream &operator<<(ostream &out, const Node &node)
@@ -21,19 +22,15 @@ ostream &operator<<(ostream &out, const Node &node)
 void Problem::Search() 
 {
     bool foundSolution = false;
-    
-    // cout << "Searching..." << endl;
-    // cout << "initial_state: \n" << initial_state << endl;
-    // cout << "final_state: \n" << final_state << endl;
 
     //FIRST ORDER OF BUSINESS!! push onto queue.
-    unexplored_queue.push(initial_state);
+    unexplored.push(initial_state);
    
     Node exploring_node;
 
-    while (!unexplored_queue.empty() && !foundSolution) {
-        exploring_node = unexplored_queue.top();
-        unexplored_queue.pop();
+    while (!unexplored.empty() && !foundSolution) {
+        exploring_node = unexplored.top();
+        unexplored.pop();
 
         cout << "exploring node: \n" << exploring_node << endl;
 
@@ -42,39 +39,22 @@ void Problem::Search()
             foundSolution = true;
         }
         else {
-            // do the explore stuff
             explore(exploring_node);
-            explored_queue.push(exploring_node); 
+            explored.push(exploring_node); 
         }
-
-
     }
 
     cout << "queue empty now!" << endl;
-
-
-    
-
-    
-
-
-    /*
-    while (queue not empty) {
-        Node exploringNode = exploring_queue.pop
-        if (exploringNode != goalstate) {
-            explore(exploringNode) //when this done, queue should have all its children added
-            explored.push(exploringNode)
-        }
-        else {
-            you found solution!
-        }
+    if (!foundSolution) {
+        cout << "solution hasn't been found :(" << endl;
     }
-    */
 }
 
 // constructor
 Problem::Problem(int userChoice)
 {
+    //to store user choice for other functions to use
+    user_choice = userChoice;
     // 1) initialize final_state node
 
     int goal_state[3][3] = {
@@ -126,26 +106,154 @@ Problem::Problem(int userChoice)
 }
 
 
-void Problem::explore(const Node& exploring_node) {
-    cout << "exploring!" << endl; 
-}
-//down
-Node Problem::down(const Node& exploring_node){
+
+//left
+Node Problem::left(const Node& exploring_node){
     Node temp = exploring_node;
-    // swap(temp[temp.zero_x][temp.zero_y], temp[temp.zero_x-1][temp.zero_y]);
-    // temp.zero_x = temp.zero_x - 1;
-    // temp.depth += 1;
-    return temp; 
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x][temp.zero_y-1]);
+    temp.zero_y = temp.zero_y - 1;
+    temp.depth += 1;
+
+    //call heuristic for uniform rn
+    if(user_choice == 1){
+        temp.heuristic = uniform_heuristic(exploring_node);
+    }
+    else{
+        cout << "Not done yet!" << endl;
+    }
+    //then make calls to the other heuristic
+
+    return temp;
+
 }
 //up
 Node Problem::up(const Node& exploring_node){
-    return exploring_node;
+    Node temp = exploring_node;
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x-1][temp.zero_y]);
+    temp.zero_x = temp.zero_x - 1;
+    temp.depth += 1;
+
+    //call heuristic for uniform rn
+    if(user_choice == 1){
+        temp.heuristic = uniform_heuristic(exploring_node);
+    }
+    else{
+        cout << "Not done yet!" << endl;
+    }
+    //then make calls to the other heuristic
+
+    return temp;
+
 }
-//left
-Node Problem::left(const Node& exploring_node){
-    return exploring_node;
+
+
+//down
+Node Problem::down(const Node& exploring_node){
+    Node temp = exploring_node;
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x+1][temp.zero_y]);
+    temp.zero_x = temp.zero_x + 1;
+    temp.depth += 1;
+
+    //call heuristic for uniform rn
+    if(user_choice == 1){
+        temp.heuristic = uniform_heuristic(exploring_node);
+    }
+    else{
+        cout << "Not done yet!" << endl;
+    }
+    //then make calls to the other heuristic
+
+    return temp;
+
 }
+
+
 //right
-Node Problem::right(const Node& exploring_node) {
-    return exploring_node;
+Node Problem::right(const Node& exploring_node){
+    Node temp = exploring_node;
+    swap(temp.table[temp.zero_x][temp.zero_y], temp.table[temp.zero_x][temp.zero_y+1]);
+    temp.zero_y = temp.zero_y + 1;
+    temp.depth += 1;
+
+    //call heuristic for uniform rn
+    if(user_choice == 1){
+        temp.heuristic = uniform_heuristic(exploring_node);
+    }
+    else{
+        cout << "Not done yet!" << endl;
+    }
+    //then make calls to the other heuristic
+
+    return temp;
+
 }
+
+// //for euclidean distance
+// int Problem::find_final_x(int num){}
+// int Problem::find_final_y(int num){}
+
+
+int Problem::uniform_heuristic(const Node& initial_state){
+    return 0;
+}
+
+// int Problem::a_misplaced_tile_heuristic(const Node& initial_state){}
+
+
+// int Problem::a_euclidean_distance_heuristic(const Node& initial_state){}
+
+bool Problem::repeated(const Node& exploring_node) {
+    bool detected = false;
+    queue<Node> temp_queue = explored;
+
+    //as long as temp isnt empty and repeat hasnt been detected, continue to search
+    while ((!temp_queue.empty()) && (!detected)) {
+        if (temp_queue.front() == exploring_node) {
+            detected = true;
+        }
+        temp_queue.pop();
+    }
+
+    return detected;
+}
+
+//if ever error, recheck zero_x and zero_y, sorry i was lazy
+//explores all valid children from operations
+void Problem::explore(const Node& exploring_node){
+        //each section makes valid child, adds it to queue
+
+        //up
+        if(exploring_node.zero_x > 0){
+            Node explore_child = up(exploring_node);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
+        }
+
+        //left
+        if(exploring_node.zero_y > 0){
+            Node explore_child = left(exploring_node);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
+        }
+
+        //down
+        if(exploring_node.zero_x < 2){
+            Node explore_child = down(exploring_node);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
+        }
+
+        //right
+        if(exploring_node.zero_y < 2){
+            Node explore_child = right(exploring_node);
+            if (!repeated(explore_child)) {
+                unexplored.push(explore_child);
+            }
+        }
+        //if you wanna test with node return type
+        //make sure to comment the queue line
+        //return exploring_node;
+    }

@@ -12,11 +12,14 @@ int main()
     // int user_algo_choice;
 
     // GET USER ALG CHOICE BEFORE MAKING PROBLEM
-    int userAlgorithmChoice = 0;
+
+
+    int userAlgorithmChoice = 1;
 
     Problem problem(userAlgorithmChoice);
 
     problem.Search();
+
 
     // //welcome the user
     // cout << "Welcome to 862331573 and 862267489's and HOLLAND SID 8 puzzle solver." << endl;
