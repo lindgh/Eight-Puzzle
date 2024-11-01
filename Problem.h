@@ -76,7 +76,7 @@ public:
     priority_queue<Node> unexplored;
     vector<Node> explored;
     stack<Node> solution;
-
+    int maxQueueNodes;
     int algorithmChoice;
 
     Problem(int userChoice, int temp_initial[3][3]);

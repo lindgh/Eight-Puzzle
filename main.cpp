@@ -77,19 +77,19 @@ int main()
         break;
     case 2:
         // uncomment below once function implemented
-        //  cout << "\nPerforming A* with the Misplaced Tile heuristic on your puzzle..." << endl;
+        cout << "\nPerforming A* with the Misplaced Tile heuristic on your puzzle..." << endl;
 
         // comment out below 2 lines once function implemented
-        cout << "\nA* with the Misplaced Tile under construction! Doing uniform cost search..." << endl;
-        userAlgorithmChoice = 1;
+        // cout << "\nA* with the Misplaced Tile under construction! Doing uniform cost search..." << endl;
+        // userAlgorithmChoice = 1;
         break;
     case 3:
         // uncomment below once function implemented
-        //  cout << "\nPerforming A* with the Euclidean distance heuristic on your puzzle..." << endl;
+        cout << "\nPerforming A* with the Euclidean distance heuristic on your puzzle..." << endl;
 
         // comment out below 2 lines once function implemented
-        cout << "\nA* with the Euclidean distance under construction! Doing uniform cost search..." << endl;
-        userAlgorithmChoice = 1;
+        // cout << "\nA* with the Euclidean distance under construction! Doing uniform cost search..." << endl;
+        // userAlgorithmChoice = 1;
 
         break;
     }

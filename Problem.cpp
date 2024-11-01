@@ -28,13 +28,22 @@ void Problem::search()
 
     while (!unexplored.empty() && !foundSolution)
     {
+        if (unexplored.size() > maxQueueNodes)
+        {
+            maxQueueNodes = unexplored.size();
+        }
         exploring_node = unexplored.top(); // remove node from top of queue
+
+        cout << "The best state to expand with g(n) = " << exploring_node.depth
+             << ", h(n) = " << exploring_node.heuristic << " is...\n"
+             << exploring_node << endl;
+
         unexplored.pop();
         explored.push_back(exploring_node);
 
         if (exploring_node == final_state) // check if final soln
         {
-            cout << "\nSolution has been found!" << endl;
+            cout << "\nYAY! Solution has been found!" << endl;
             foundSolution = true;
             // below should be setting all of final_state's data to exploring_node's
             final_state = exploring_node;
@@ -79,7 +88,12 @@ void Problem::trace()
         ++numExplored;
     }
 
-    cout << "Nodes explored: " << numExplored << endl;
+    cout << "To solve this problem, our search algorithm expanded a total of "
+         << numExplored << " nodes." << endl;
+    cout << "The maximum number of nodes in the queue at any one time: "
+         << maxQueueNodes << endl;
+    cout << "The depth of the goal node was " << final_state.depth << "."
+         << endl;
     cout << "Nodes in solution: " << solution_nodes << endl;
     cout << "\nBacktracing: \n"
          << endl;
@@ -138,6 +152,8 @@ Problem::Problem(int userChoice, int temp_initial[3][3])
 
     initial_state.heuristic = 0; // TESTING. AFTER IMPLEMENTING HEURISTICS, CALL FUNC USING userChoice
     initial_state.depth = 0;
+
+    maxQueueNodes = 0;
 }
 
 // left
@@ -225,12 +241,12 @@ int Problem::find_final_y(int num)
     return 0;
 }
 
-int Problem::uniform_heuristic(const Node &initial_state)
+int Problem::uniform_heuristic(const Node &temp)
 {
     return 0;
 }
 
-int Problem::a_misplaced_tile_heuristic(const Node &initial_state)
+int Problem::a_misplaced_tile_heuristic(const Node &temp)
 {
     int res;
     // for each index [n][n]-
@@ -240,7 +256,7 @@ int Problem::a_misplaced_tile_heuristic(const Node &initial_state)
         {
             // if initial != final position the calclulate
             // checks if value in initial = value in final
-            if (initial_state.table[i][j] != final_state.table[i][j])
+            if (temp.table[i][j] != final_state.table[i][j])
             {
                 // we need to find where the position supposed to for value
                 res += 1;
@@ -250,11 +266,13 @@ int Problem::a_misplaced_tile_heuristic(const Node &initial_state)
     return res;
 }
 
-int Problem::a_euclidean_distance_heuristic(const Node &initial_state)
+int Problem::a_euclidean_distance_heuristic(const Node &temp)
 {
     int final_x;
     int final_y;
     int res = 0;
+    int tempA = 0;
+    int tempB = 0;
     // for each index [n][n]
     for (int i = 0; i < 3; i++)
     {
@@ -262,17 +280,59 @@ int Problem::a_euclidean_distance_heuristic(const Node &initial_state)
         {
             // if initial != final position the calclulate
             // checks if value in initial = value in final
-            if (initial_state.table[i][j] != final_state.table[i][j])
+            if (temp.table[i][j] != final_state.table[i][j])
             {
                 // we need to find where the position supposed to be
-                final_x = find_final_x(initial_state.table[i][j]);
-                final_y = find_final_y(initial_state.table[i][j]);
+                final_x = find_final_x(temp.table[i][j]);
+                final_y = find_final_y(temp.table[i][j]);
                 // if this is error, calculate x and y seperate then add
-                res += sqrt((i - final_x) ^ 2 + (j - final_y) ^ 2);
+                tempA = pow((i - final_x), 2);
+                tempB = pow((j - final_y), 2);
+                res += sqrt(tempA + tempB);
             }
         }
     }
     return res;
+}
+
+bool Problem::repeated(const Node &exploring_node)
+{
+    bool detected = false;
+
+    // check explored vector to see if exploring_node is repeated
+    for (int i = 0; i < explored.size(); i++)
+    {
+        if (explored.at(i) == exploring_node)
+        {
+            detected = true;
+            break;
+        }
+    }
+
+    return detected;
+}
+
+// call heuristic function based on algorithmChoice
+int Problem::calculateHeuristic(const Node &temp)
+{
+    int h = 0;
+
+    switch (algorithmChoice)
+    {
+    case 1:
+        h = uniform_heuristic(temp);
+        break;
+    case 2:
+        // cout << "\nA* with the Misplaced Tile heuristic under construction..." << endl;
+        h = a_misplaced_tile_heuristic(temp);
+        break;
+    case 3:
+        // cout << "\nA* with the Euclidean distance heuristic under construction..." << endl;
+        h = a_euclidean_distance_heuristic(temp);
+        break;
+    }
+
+    return h;
 }
 
 // if ever error, recheck zero_x and zero_y, sorry i was lazy
