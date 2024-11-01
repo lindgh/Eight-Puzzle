@@ -34,9 +34,9 @@ void Problem::search()
         }
         exploring_node = unexplored.top(); // remove node from top of queue
 
-        cout << "The best state to expand with g(n) = " << exploring_node.depth
-             << ", h(n) = " << exploring_node.heuristic << " is...\n"
-             << exploring_node << endl;
+        // cout << "The best state to expand with g(n) = " << exploring_node.depth
+        //      << ", h(n) = " << exploring_node.heuristic << " is...\n"
+        //      << exploring_node << endl;
 
         unexplored.pop();
         explored.push_back(exploring_node);
@@ -95,9 +95,10 @@ void Problem::trace()
     cout << "The depth of the goal node was " << final_state.depth << "."
          << endl;
     cout << "Nodes in solution: " << solution_nodes << endl;
-    cout << "\nBacktracing: \n"
+    cout << "\nBacktracking: \n"
          << endl;
 
+    // below prints out the backtracking of the solution
     while (!solution.empty())
     {
         cout << solution.top() << endl;
