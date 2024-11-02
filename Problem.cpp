@@ -34,9 +34,9 @@ void Problem::search()
         }
         exploring_node = unexplored.top(); // remove node from top of queue
 
-        // cout << "The best state to expand with g(n) = " << exploring_node.depth
-        //      << ", h(n) = " << exploring_node.heuristic << " is...\n"
-        //      << exploring_node << endl;
+        cout << "The best state to expand with g(n) = " << exploring_node.depth
+             << ", h(n) = " << exploring_node.heuristic << " is...\n"
+             << exploring_node << endl;
 
         unexplored.pop();
         explored.push_back(exploring_node);
@@ -381,6 +381,7 @@ void Problem::explore(const Node &exploring_node)
             unexplored.push(explore_child);
         }
     }
+
     // if you wanna test with node return type
     // make sure to comment the queue line
     // return exploring_node;
