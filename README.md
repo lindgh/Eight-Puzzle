@@ -10,3 +10,6 @@ In this project, we implemented an A* search algorithm with three different heur
 
 ## Demo
 
+https://github.com/user-attachments/assets/497b93f5-81f4-4515-b5ab-4a049b997739
+
+
