@@ -5,7 +5,7 @@ In this project, we implemented an A* search algorithm with three different heur
 
 ## What We Learned
 - Design of a generalized search algorithm
-- Implementation of different heuristics (Uniform Cost, Misplaced Tile, Euclidean Distance) to understand the importance of a good heuristic on a search algorithm
+- Implementation of different heuristics (Uniform Cost, Misplaced Tile, Euclidean Distance) to understand the importance of a good heuristic on an AI search problem
 - The impact of a heuristic on space and time complexity
 
 ## Demo
