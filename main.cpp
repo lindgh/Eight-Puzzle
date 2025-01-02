@@ -13,12 +13,12 @@ int main()
     // below is if user wants default puzzle. Only modify it if they select option "2"
     int temp_initial[3][3] =
         {
-            {1, 4, 3},
-            {0, 2, 6},
-            {4, 7, 8}};
+            {1, 2, 3},
+            {4, 8, 0},
+            {7, 6, 5}};
 
     // welcome the user
-    cout << "\nWelcome to 862331573 and 862267489's 8 puzzle solver." << endl;
+    cout << "\nWelcome to Ghunaim and Kethidi's 8 puzzle solver." << endl;
     cout << "Type \"1\" to enter your own puzzle, or \"2\" to use a default puzzle: ";
     cin >> user_initial_state;
     cout << endl;
