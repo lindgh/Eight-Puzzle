@@ -1,4 +1,4 @@
-# Eight Puzzle Project
+# Eight Puzzle Solver
 Authors: [Linda Ghunaim](https://github.com/lindgh) and [Advithi Kethidi](https://github.com/AKethidi)
 
 In this project, we implemented an A* search algorithm with three different heuristics to solve an eight puzzle. The implementation takes an object-oriented design and allows for variation of the eight puzzle through user input.
